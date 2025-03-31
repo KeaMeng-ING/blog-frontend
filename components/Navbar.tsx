@@ -1,4 +1,4 @@
-import { auth, signIn, signOut } from "@/auth";
+import { auth, signOut } from "@/auth";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -10,13 +10,13 @@ const Navbar = async () => {
     <header className="px-5 py-3 bg-white shadow-sm font-poppins">
       <nav className="flex justify-between items-center">
         <Link href="/">
-          <Image src="/logo.png" alt="logo" width={144} height={30} />
+          <Image src="/logo.png" alt="logo" width={144} height={30} priority />
         </Link>
         <div className="flex items-center gap-5 text-black">
           {session && session?.user ? (
             <>
-              <Link href="/startup/create">
-                <span>Create</span>
+              <Link href="/blog/create">
+                <span className="font-bold">Create</span>
               </Link>
 
               <form
@@ -27,22 +27,26 @@ const Navbar = async () => {
                 }}
               >
                 <button type="submit">
-                  <span>Log Out</span>
+                  <span className="font-bold cursor-pointer">Log Out</span>
                 </button>
               </form>
 
               {/* TODO: TO be Update */}
               <Link href="#">
-                <span>{session?.user?.name}</span>
+                <span className="font-bold cursor-pointer">
+                  {session?.user?.name}
+                </span>
               </Link>
             </>
           ) : (
             <>
-              <Link href="/sign-in">
-                <button>Log In</button>
+              <Link href="sign-in">
+                <button className="font-bold cursor-pointer">Log In</button>
               </Link>
               <Link href="sign-up">
-                <button>Get Started</button>
+                <button className="font-bold cursor-pointer">
+                  Get Started
+                </button>
               </Link>
             </>
           )}
