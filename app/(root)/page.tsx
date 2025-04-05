@@ -2,6 +2,17 @@ import BlogCard from "@/components/BlogCard";
 import SearchForm from "@/components/SearchForm";
 import React from "react";
 
+interface Post {
+  id: number;
+  title: string;
+  published_date: string;
+  author: string;
+  image_url: string;
+  content: string;
+  views: number;
+  category: string;
+}
+
 export default async function home({
   searchParams,
 }: {
@@ -10,68 +21,11 @@ export default async function home({
   const query = await searchParams;
   const { query: q } = query;
 
-  const posts = [
-    {
-      id: 1,
-      title: "Hello World",
-      published_date: "20 May, 2025",
-      author: "John Doe",
-      image_url:
-        "https://lh7-rt.googleusercontent.com/docsz/AD_4nXf1wlLTqTQ9pcYUzfKH1ezrHvqSAVf8lE2konBcR2XYpDU7E88nzX3y05db5pRPdArQ6FB9OkuNXjKChl0FqXSc6D9WPv6XfBL2HWJtNSXokISxLQB5lNfE82yvD_f_f4qNljax?key=spbvIU828Tn0aeT_YjMRri-R",
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.",
-      views: 100,
-      category: "Technology",
-    },
-    {
-      id: 2,
-      title: "AI and the Future",
-      published_date: "22 May, 2025",
-      author: "Jane Smith",
-      image_url:
-        "https://lh7-rt.googleusercontent.com/docsz/AD_4nXf1wlLTqTQ9pcYUzfKH1ezrHvqSAVf8lE2konBcR2XYpDU7E88nzX3y05db5pRPdArQ6FB9OkuNXjKChl0FqXSc6D9WPv6XfBL2HWJtNSXokISxLQB5lNfE82yvD_f_f4qNljax?key=spbvIU828Tn0aeT_YjMRri-R",
-      content:
-        "Artificial Intelligence is shaping the future in unexpected ways.",
-      views: 250,
-      category: "AI",
-    },
-    {
-      id: 3,
-      title: "Cybersecurity Trends",
-      published_date: "25 May, 2025",
-      author: "Michael Brown",
-      image_url:
-        "https://lh7-rt.googleusercontent.com/docsz/AD_4nXf1wlLTqTQ9pcYUzfKH1ezrHvqSAVf8lE2konBcR2XYpDU7E88nzX3y05db5pRPdArQ6FB9OkuNXjKChl0FqXSc6D9WPv6XfBL2HWJtNSXokISxLQB5lNfE82yvD_f_f4qNljax?key=spbvIU828Tn0aeT_YjMRri-R",
-      content:
-        "Cyber threats are evolving rapidly, making security a top priority.",
-      views: 320,
-      category: "Cybersecurity",
-    },
-    {
-      id: 4,
-      title: "The Rise of Quantum Computing",
-      published_date: "28 May, 2025",
-      author: "Sarah Johnson",
-      image_url:
-        "https://lh7-rt.googleusercontent.com/docsz/AD_4nXf1wlLTqTQ9pcYUzfKH1ezrHvqSAVf8lE2konBcR2XYpDU7E88nzX3y05db5pRPdArQ6FB9OkuNXjKChl0FqXSc6D9WPv6XfBL2HWJtNSXokISxLQB5lNfE82yvD_f_f4qNljax?key=spbvIU828Tn0aeT_YjMRri-R",
-      content:
-        "Quantum computing is set to revolutionize industries from finance to healthcare.",
-      views: 150,
-      category: "Technology",
-    },
-    {
-      id: 5,
-      title: "Blockchain Beyond Cryptocurrency",
-      published_date: "30 May, 2025",
-      author: "Emily White",
-      image_url:
-        "https://lh7-rt.googleusercontent.com/docsz/AD_4nXf1wlLTqTQ9pcYUzfKH1ezrHvqSAVf8lE2konBcR2XYpDU7E88nzX3y05db5pRPdArQ6FB9OkuNXjKChl0FqXSc6D9WPv6XfBL2HWJtNSXokISxLQB5lNfE82yvD_f_f4qNljax?key=spbvIU828Tn0aeT_YjMRri-R",
-      content:
-        "Blockchain technology has applications far beyond digital currency.",
-      views: 200,
-      category: "Blockchain",
-    },
-  ];
+  const response = await fetch("http://localhost:8080/api/posts", {
+    cache: "no-store",
+  });
+  const posts: Post[] = await response.json();
+  console.log(posts);
 
   return (
     <>
@@ -96,7 +50,7 @@ export default async function home({
           {q ? `Search results for "${q}"` : "All Blogs"}
         </p>
         <ul className="mt-7 card_grid">
-          {posts.map((post) => (
+          {posts.map((post: Post) => (
             <BlogCard key={post.id} post={post} />
           ))}
         </ul>
