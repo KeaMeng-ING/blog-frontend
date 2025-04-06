@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { AuthProvider } from "./context/AuthContext";
 
 import { Poppins } from "next/font/google";
 
@@ -23,9 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <AuthProvider>
-        <body className={poppins.variable}>{children}</body>
-      </AuthProvider>
+      <body className={poppins.variable}>{children}</body>
     </html>
   );
 }

@@ -2,29 +2,40 @@ import React from "react";
 import { formatDate } from "@/lib/utils";
 import { EyeIcon } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 interface Post {
   title: string;
-  published_date: string;
+  createdAt: string;
   author: string;
-  image_url: string;
+  imageUrl: string;
   content: string;
   views: number;
   category: string;
+  subtitle: string;
 }
 
 const BlogCard = ({ post }: { post: Post }) => {
-  const { title, published_date, author, image_url, content, views, category } =
-    post;
+  const {
+    title,
+    createdAt,
+    author,
+    imageUrl,
+
+    subtitle,
+    views,
+    category,
+  } = post;
 
   return (
     <li className="startup-card group">
       <div className=" flex justify-between">
-        <p className="startup-card_date">{formatDate(published_date)}</p>
+        <p className="startup-card_date">{formatDate(createdAt)}</p>
         <div className="flex gap-1.5">
           <EyeIcon className="size-6 text-my-primary" />
           <span className="text-16-medium">{views}</span>
+          {/* TODO: To be updated */}
         </div>
       </div>
 
@@ -34,7 +45,9 @@ const BlogCard = ({ post }: { post: Post }) => {
             <p className="font-medium text-lg line-clamp-1">{author}</p>
           </Link>
           <Link href="#">
-            <h3 className="font-semibold text-2xl line-clamp-1">{title}</h3>
+            <h3 className="font-semibold text-xl line-clamp-2 h-[56px]">
+              {title}
+            </h3>
           </Link>
         </div>
         <Link href="#">
@@ -50,10 +63,16 @@ const BlogCard = ({ post }: { post: Post }) => {
       </div>
 
       <Link href="#">
-        <p className="startup-card_desc">{content}</p>
+        <p className="startup-card_desc">{subtitle}</p>
 
         {/* TODO: To be updated */}
-        <img src={image_url} alt="placeholder" className="startup-card_img" />
+        <Image
+          src={imageUrl}
+          width={400}
+          height={200}
+          alt="placeholder"
+          className="startup-card_img"
+        />
       </Link>
 
       <div className="flex justify-between gap-3 mt-5">

@@ -1,4 +1,3 @@
-// app/context/AuthContext.tsx
 "use client";
 
 import {
@@ -8,69 +7,64 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import axios from "axios";
 
 interface User {
   id: string;
   name: string;
   email: string;
-  avatar?: string; // Optional field
 }
 
 interface AuthContextType {
   user: User | null;
-  logout: () => Promise<void>;
+  logout: () => void;
   isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in on mount
-    const checkUserLoggedIn = async () => {
-      try {
-        // Fetch current user data or check session
-        const response = await fetch("/api/auth/me");
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
-        } else {
+    const loadUser = () => {
+      const token = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
+
+      if (token && storedUser) {
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        try {
+          const parsedUser: User = JSON.parse(storedUser);
+          setUser(parsedUser);
+        } catch {
           setUser(null);
         }
-      } catch (error) {
-        console.error("Auth check failed", error);
+      } else {
         setUser(null);
-      } finally {
-        setIsLoading(false);
       }
+
+      setIsLoading(false);
     };
 
-    checkUserLoggedIn();
+    loadUser();
   }, []);
 
-  const logout = async () => {
-    setIsLoading(true);
-    try {
-      await fetch("/api/auth/logout", { method: "POST" });
-      setUser(null);
-    } catch (error) {
-      console.error("Logout failed", error);
-    } finally {
-      setIsLoading(false);
-    }
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    delete axios.defaults.headers.common["Authorization"];
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, logout, isLoading, setUser }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export function useAuth() {
+export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
